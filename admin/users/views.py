@@ -45,8 +45,7 @@ def login(request):
 
 @api_view(['GET'])
 def users(request):
-    users = User.objects.all()
-    serializer = UserSerializer(users, many=True) # many = true because returns multiple users
+    serializer = UserSerializer(User.objects.all(), many=True) # many = true because returns multiple users
     return Response(serializer.data)
 
 
