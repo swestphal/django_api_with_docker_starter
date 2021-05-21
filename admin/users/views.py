@@ -1,9 +1,12 @@
 from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import exceptions
+from rest_framework.views import APIView
+
 from .models import User
 from .serializers import UserSerializer
-from .authentication import generate_access_token
+from .authentication import generate_access_token, JWTAuthentication
 
 
 @api_view(['POST'])
@@ -38,6 +41,16 @@ def login(request):
         'jwt': token
     }
     return response
+
+class AuthenticatedUser(APIView):
+    authentication_classes = [JWTAuthentication] # new middleware
+    permission_classes = [IsAuthenticated] # middleware checks if user is authenticated before going on
+    def get(self,request):
+        serializer = UserSerializer(request.user)
+        return Response({
+            'data': serializer.data
+        })
+
 
 
 @api_view(['GET'])
