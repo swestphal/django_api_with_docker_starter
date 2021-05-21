@@ -36,10 +36,28 @@ def login(request):
     response = Response()
 
     token = generate_access_token(user)
-    response.set_cookie(key='jwt', value=token, httponly=True)
+    response.set_cookie(key='jwt', value=token, httponly=True) # attach cookie to response
     response.data = {
         'jwt': token
     }
+    return response
+
+
+@api_view(['GET'])
+def users(request):
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True) # many = true because returns multiple users
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+def logout(_):
+    response = Response()
+    response.delete_cookie(key='jwt')
+    response.data = {
+        'message': 'Success'
+    }
+
     return response
 
 class AuthenticatedUser(APIView):
@@ -53,8 +71,3 @@ class AuthenticatedUser(APIView):
 
 
 
-@api_view(['GET'])
-def users(request):
-    users = User.objects.all()
-    serializer = UserSerializer(users, many=True) # many = true because returns multiple users
-    return Response(serializer.data)
