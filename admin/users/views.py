@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from .models import User, Permission, Role
 from .serializers import UserSerializer, PermissionSerializer, RoleSerializer
 from .authentication import generate_access_token, JWTAuthentication
+from admin.pagination import CustomPagination
 
 
 @api_view(['POST'])
@@ -54,6 +55,7 @@ class UserGenericAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.
     permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    pagination_class = CustomPagination
 
     def get(self, request, pk=None):
         if pk:
@@ -101,18 +103,15 @@ class PermissionAPIView(APIView):
         })
 
 
-
-
 class AuthenticatedUser(APIView):
     authentication_classes = [JWTAuthentication] # new middleware
     permission_classes = [IsAuthenticated] # middleware checks if user is authenticated before going on
 
-    def get(self,request):
+    def get(self, request):
         serializer = UserSerializer(request.user)
         return Response({
             'data': serializer.data
         })
-
 
 
 class RoleViewSet(viewsets.ViewSet):
