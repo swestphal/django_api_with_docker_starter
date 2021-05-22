@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from rest_framework import exceptions
 from rest_framework.views import APIView
 
-from .models import User
-from .serializers import UserSerializer
+from .models import User, Permission
+from .serializers import UserSerializer, PermissionSerializer
 from .authentication import generate_access_token, JWTAuthentication
 
 
@@ -59,9 +59,25 @@ def logout(_):
 
     return response
 
+
+class PermissionAPIView(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        serializer = PermissionSerializer(Permission.objects.all(), many=True)
+
+        return Response({
+            'data': serializer.data
+        })
+
+
+
+
 class AuthenticatedUser(APIView):
     authentication_classes = [JWTAuthentication] # new middleware
     permission_classes = [IsAuthenticated] # middleware checks if user is authenticated before going on
+
     def get(self,request):
         serializer = UserSerializer(request.user)
         return Response({
