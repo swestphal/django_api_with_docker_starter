@@ -144,9 +144,10 @@ class AuthenticatedUser(APIView):
     permission_classes = [IsAuthenticated] # middleware checks if user is authenticated before going on
 
     def get(self, request):
-        serializer = UserSerializer(request.user)
+        data = UserSerializer(request.user).data
+        data['permissions'] = [p['name'] for p in data['role']['permissions']]
         return Response({
-            'data': serializer.data
+            'data': data
         })
 
 
