@@ -5,6 +5,7 @@ from rest_framework import exceptions, viewsets, status, generics, mixins
 from rest_framework.views import APIView
 
 from .models import User, Permission, Role
+from .permissions import ViewPermissions
 from .serializers import UserSerializer, PermissionSerializer, RoleSerializer
 from .authentication import generate_access_token, JWTAuthentication
 from admin.pagination import CustomPagination
@@ -52,7 +53,8 @@ def login(request):
 
 class UserGenericAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.RetrieveModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin ):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated & ViewPermissions]
+    permission_object = 'users'
     queryset = User.objects.all()
     serializer_class = UserSerializer
     pagination_class = CustomPagination
@@ -153,8 +155,8 @@ class AuthenticatedUser(APIView):
 
 class RoleViewSet(viewsets.ViewSet):
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
-
+    permission_classes = [IsAuthenticated & ViewPermissions]
+    permission_object = 'roles'
     def list(self, request):
         serializer = RoleSerializer(Role.objects.all(), many=True)
         return Response({
