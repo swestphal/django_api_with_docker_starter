@@ -4,6 +4,7 @@ from rest_framework.response import Response
 DEFAULT_PAGE = 1
 DEFAULT_PAGE_SIZE = 1
 
+
 class CustomPagination(PageNumberPagination):
     page = DEFAULT_PAGE
     page_size = DEFAULT_PAGE_SIZE
