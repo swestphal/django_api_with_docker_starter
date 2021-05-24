@@ -17,7 +17,12 @@
               <td>{{user.first_name }} {{user.last_name}}</td>
               <td>{{user.email}}</td>
               <td>{{user.role.name}}</td>
-              <td>libero</td>
+              <td>
+                <div class="btn-group mr-2">
+                  <a href="javascript:void(0)" class="btn btn-sm btn-outline-secondary" @click="user_edit(user.id)">Edit</a>
+                  <a href="javascript:void(0)" class="btn btn-sm btn-outline-secondary" @click="user_delete(user.id)">Delete</a>
+                </div>
+              </td>
             </tr>
 
           </tbody>
@@ -66,9 +71,22 @@ export default {
       page.value--;
       await load();
     }
+
+    const user_edit = (id) => {
+      console.log("-")
+    }
+
+    const user_delete = async (id:number) => {
+      if(confirm('Are you sure?')) {
+        const response = await axios.delete(`users/${id}`)
+        users.value = users.value.filter((u: {id:number}) => u.id !== id)
+      }
+    }
     return {
       next,
       prev,
+      user_edit,
+      user_delete,
       users
     }
   }
