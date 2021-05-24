@@ -8,9 +8,10 @@ import Users from '@/secure/users/Users.vue'
 const routes: Array<RouteRecordRaw> = [
   { path: '/register', component: Register },
   { path: '/login', component: Login },
-  { path: '/', component: Secure, children: [
-      {path:'', component:Dashboard},
-      {path:'users', component:Users}
+  { path: '', component: Secure, children: [
+      {path:'',redirect:'/dashboard'},
+      {path:'/dashboard', component:Dashboard},
+      {path:'/users', component:Users}
     ] }
 ]
 
