@@ -6,42 +6,38 @@
   <Menu/>
 
     <main role="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <h2>Section title</h2>
-      <div class="table-responsive">
-        <table class="table table-striped table-sm">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Header</th>
-              <th>Header</th>
-              <th>Header</th>
-              <th>Header</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1,015</td>
-              <td>sodales</td>
-              <td>ligula</td>
-              <td>in</td>
-              <td>libero</td>
-            </tr>
-          <tr>
-              <td>1,015</td>
-              <td>sodales</td>
-              <td>ligula</td>
-              <td>in</td>
-              <td>libero</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <router-view />
     </main>
   </div>
 </div>
 
 </template>
+<script>
+import {onMounted} from "vue";  // hook
+import Menu from "@/components/Menu";
+import Nav from "@/components/Nav";
+import axios from "axios";
+import {useRouter} from "vue-router";
 
+export default{
+  components:{
+    Menu,
+    Nav
+  },
+  setup () {
+    const router = useRouter()
+
+    // after html is loaded
+    onMounted(async  () => {
+      try {
+        const response = await axios.get('user')
+      } catch(e) {
+        await router.push('/login')
+      }
+    })
+  }
+}
+</script>
 <style>
 
 body {
@@ -148,13 +144,3 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 255, 255, .25);
 }
 </style>
-<script>
-import Menu from "@/components/Menu";
-import Nav from "@/components/Nav";
-export default{
-  components:{
-    Menu,
-    Nav
-  }
-}
-</script>
