@@ -1,5 +1,5 @@
 <template>
-  <Nav/>
+  <Nav :user="user"/>
 
 <div class="container-fluid">
   <div class="row">
@@ -13,7 +13,7 @@
 
 </template>
 <script>
-import {onMounted} from "vue";  // hook
+import {onMounted, ref} from "vue";  // hook
 import Menu from "@/components/Menu";
 import Nav from "@/components/Nav";
 import axios from "axios";
@@ -26,15 +26,21 @@ export default{
   },
   setup () {
     const router = useRouter()
+    const user = ref(null)
 
     // after html is loaded
     onMounted(async  () => {
       try {
         const response = await axios.get('user')
+        user.value = response.data.data
       } catch(e) {
         await router.push('/login')
       }
-    })
+    });
+
+    return {
+      user
+    }
   }
 }
 </script>

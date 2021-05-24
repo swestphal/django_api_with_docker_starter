@@ -60,13 +60,13 @@ class UserGenericAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixins.
     pagination_class = CustomPagination
 
     def get(self, request, pk=None):
+
         if pk:
             return Response({
                 'data': self.retrieve(request, pk).data
             })
-        return Response({
-                'data': self.list(request).data
-            })
+        return self.list(request)
+
 
     def post(self, request):
         request.data.update({
