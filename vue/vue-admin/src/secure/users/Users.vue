@@ -43,6 +43,8 @@
 <script lang="ts">
 import {ref, onMounted} from "vue";
 import axios from "axios";
+import {User} from "@/classes/class";
+import {Entity} from "@/interfaces/Entity";
 
 
 export default {
@@ -54,7 +56,6 @@ export default {
 
     const load = async ()=> {
       const response = await axios.get(`users?page=${page.value}`)
-      console.log(response)
       users.value = response.data.data
       lastPage.value = response.data.data.last_page
     }
@@ -79,7 +80,9 @@ export default {
     const user_delete = async (id:number) => {
       if(confirm('Are you sure?')) {
         const response = await axios.delete(`users/${id}`)
-        users.value = users.value.filter((u: {id:number}) => u.id !== id)
+        //users.value = users.value.filter((u: {id:number}) => u.id !== id)
+        //users.value = users.value.filter((u: User) => u.id !== id) -> classes
+        users.value = users.value.filter((u: Entity) => u.id !== id) // -> interface
       }
     }
     return {

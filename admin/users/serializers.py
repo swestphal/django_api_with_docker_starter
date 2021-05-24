@@ -23,7 +23,7 @@ class RoleSerializer(serializers.ModelSerializer):
         model = Role
         fields = '__all__'
 
-    # in order to get post /api/roles the permission objects in the response
+    # in order to get post /api/roles the classes objects in the response
     def create(self, validated_data):
         permissions = validated_data.pop('permissions', None)
         instance = self.Meta.model(**validated_data)
