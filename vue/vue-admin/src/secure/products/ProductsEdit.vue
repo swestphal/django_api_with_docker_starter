@@ -1,55 +1,54 @@
 <template>
-  <div class="table-responsive">
-    <table class="table table-striped table-sm">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Image</th>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Price</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="product in products" :key="product.id">
-          <td>{{product.id}}</td>
-          <td><img :src="product.image" height="50"/></td>
-          <td>{{product.title}}</td>
-          <td>{{product.description}}</td>
-          <td>{{product.price}}</td>
-          <td>
-            <div class="btn-group mr-2">
-              <router-link :to="`/products/${product.id}/edit`"  class="btn btn-sm btn-outline-secondary" >Edit</router-link>
-              <a href="javascript:void(0)" class="btn btn-sm btn-outline-secondary" @click="product_delete(product.id)">Delete</a>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <form @submit.prevent="submit">
+    <div class="form-group">
+      <label for="title">Title</label>
+      <input type="text" class="form-control" name="title" id="title"  v-model="title">
+    </div>
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input type="text" class="form-control" name="description" id="description"  v-model="description">
+    </div>
+     <div class="form-group">
+       <label for="image">Image</label>
+       <input type="text" class="form-control" name="image" id="image" placeholder="name@example.com" v-model="image">
+    </div>
+    <div class="form-group">
+      <label for="price">Price</label>
+      <input type="text" class="form-control" name="price" id="price"  v-model="price">
+    </div>
+    <button class="btn btn-outline-secondary">Save</button>
+  </form>
 </template>
 <script>
 import axios from "axios";
-import {onMounted, ref} from "vue";
+import {ref} from "vue";
+import {useRouter} from "vue-router";
 
 export default {
-  name:'Products',
+  name:'ProductsCreate',
   setup() {
-    const products=ref([])
+    const title=ref("")
+    const description=ref("")
+    const image=ref("")
+    const price=ref("")
+    const router = useRouter()
 
-    onMounted(async()=> {
-        const response = await axios.get('products')
-        products.value = response.data.data
 
-    })
-
-    const product_delete= ()=> {
-      console.log("huhu")
+    const submit = async ()=> {
+      axios.post('products',{
+        title:title.value,
+        description:description.value,
+        image:image.value,
+        price:price.value
+      })
+      await router.push('/products')
     }
     return {
-      products,
-      product_delete
+      title,
+      description,
+      image,
+      price,
+      submit
     }
   }
 }

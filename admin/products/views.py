@@ -24,9 +24,8 @@ class ProductGenericAPIView(generics.GenericAPIView, mixins.ListModelMixin, mixi
             return Response({
                 'data': self.retrieve(request, pk).data
             })
-        return Response({
-                'data': self.list(request).data
-            })
+        return self.list(request)
+
 
     def post(self, request):
         return Response({
@@ -54,5 +53,5 @@ class FileUploadView(APIView):
         url = default_storage.url(file_name)
 
         return Response({
-            'url': 'https://localhost:8000/api'+url
+            'url': 'http://localhost:8000/api'+url
         })
